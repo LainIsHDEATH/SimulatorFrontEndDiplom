@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { API } from "../../api";
 export default function NewRoomForm({ userId, onCreated }) {
-    const [name,setName]=useState("");
-    const [json,setJson]=useState("");
-    const save=async(e)=>{
-        e.preventDefault();
-        await API.createRoom(userId,{ name, roomParams:JSON.parse(json) });
-        setName(""); setJson("");
-        onCreated();
-    };
+  const [name, setName] = useState("");
+  const [json, setJson] = useState("");
+  const save = async (e) => {
+    e.preventDefault();
+    userId = 1;
+    const created = await API.createRoom(userId, {
+      name,
+      roomParams: JSON.parse(json)}
+    );
+    // добавляем новую комнату в список
+    setName("");
+    setJson("");
+    onCreated(created);
+    // onCreated();
+  };
     return(
         <form onSubmit={save} className="space-y-2 bg-gray-50 p-4 border rounded">
             <h3 className="font-semibold">Новая комната</h3>

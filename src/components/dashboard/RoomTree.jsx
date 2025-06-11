@@ -38,7 +38,7 @@ export function RoomTree({ room, simulations, pidConfigs, models,
                 {/* кнопка autotune */}
                 <button className="mt-1 text-xs underline"
                         onClick={async()=>{
-                            await API.autotune(room.id);
+                            await API.autotunePID(room.id);
                             onRefresh();
                         }}>
                     автотюнинг Cohen–Coon
@@ -92,14 +92,17 @@ export function RoomTree({ room, simulations, pidConfigs, models,
 
             {/* Существующие симуляции */}
             <div className="bg-white p-3 rounded shadow">
-                <h4 className="font-semibold mb-1">Симуляции</h4>
-                {simulations.map(s=>(
-                    <button key={s.id}
-                            className="block w-full text-left text-sm px-2 py-1 rounded hover:bg-gray-100"
-                            onClick={()=>onSimulationClick(s)}>
-                        {s.name}
-                    </button>
-                ))}
+              <h4 className="font-semibold mb-1">Симуляции</h4>
+              {simulations.length === 0 && <p className="text-sm text-gray-500">Нет симуляций</p>}
+              {simulations.map(s => (
+                <button
+                  key={s.id}
+                  className="block w-full text-left text-sm px-2 py-1 rounded hover:bg-gray-100"
+                  onClick={() => onSimulationClick(s)}
+                >
+                  {s.name}
+                </button>
+              ))}
             </div>
         </div>
     );

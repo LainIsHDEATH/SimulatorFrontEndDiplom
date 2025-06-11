@@ -12,6 +12,7 @@ export default function Dashboard() {
     const [pidConfigs,setPids]   = useState([]);
     const [models,setModels]     = useState([]);
     const [openedCharts,setCharts] = useState([]);             // массив simId
+    const safeArray = (val) => (Array.isArray(val) ? val : []);
 
     /* загрузка пользователей */
     const [users,setUsers] = useState([]);
@@ -21,13 +22,14 @@ export default function Dashboard() {
     const [rooms,setRooms] = useState([]);
     useEffect(()=>{
         if(!user) return;
-        API.getRoomsByUser(user.id).then(r=>setRooms(r.roons ?? r));
+        API.getRoomsByUser(user.id).then(r => setRooms(safeArray(r.rooms ?? r)))
+        .catch(() => setRooms([]));      // при HTTP-ошибке
     },[user]);
 
     /* при выборе комнаты — тянем её данные */
     useEffect(()=>{
         if(!room) return;
-        API.getSimulations(room.id).then(setSims);
+        API.getSimulations(room.id).then( r=> setSims(r.simulations ?? r));
         API.getPidConfigs(room.id).then(r=>setPids(r.configs ?? r));
         API.getModels(room.id).then(r=>setModels(r.models ?? r));
     },[room]);
@@ -58,7 +60,9 @@ export default function Dashboard() {
                     <>
                         <div className="p-4 bg-white rounded shadow">
                             <h3 className="font-semibold mb-2">Комнаты</h3>
-                            {rooms.map(r=>(
+                            {rooms.length === 0
+                              ? <span className="text-sm text-gray-500">Нет комнат</span>
+                              :rooms.map(r=>(
                                 <button key={r.id}
                                         className={`block w-full text-left px-2 py-1 rounded
                           ${room?.id===r.id?"bg-blue-500 text-white":"hover:bg-gray-100"}`}
@@ -68,8 +72,13 @@ export default function Dashboard() {
                             ))}
                         </div>
 
-                        {/* Форма добавления новой комнаты */}
-                        <NewRoomForm userId={user.id} onCreated={()=>API.getRoomsByUser(user.id).then(setRooms)} />
+                         Форма добавления новой комнаты
+                        <NewRoomForm
+                          userId={user.id}
+                          onCreated={() =>
+                            API.getRoomsByUser(user.id).then(r => setRooms(r.roons ?? r.rooms ?? r))
+                          }
+                        />
                     </>
                 )}
 

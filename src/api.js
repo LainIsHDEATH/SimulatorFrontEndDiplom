@@ -4,25 +4,36 @@ export const API = {
   register: (body) => fetch("http://localhost:8082/api/users/register",
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(body)
     }).then(r => r.json()),
   getUsers: () => fetch("http://localhost:8082/api/users").then(r => r.json()),
 
     /* ROOMS */
-    createRoom: (userId, body) => fetch(`http://localhost:8082/api/rooms/${userId}`, {method:"POST",body:JSON.stringify(body)}).then(r=>r.json()),
-    getRoomsByUser: (userId)   => fetch(`http://localhost:8082/api/rooms/user-rooms/${userId}`).then(r=>r.json()),
-    getRooms: async () => [{ id: "r1", name: "Комната 1" }, { id: "r2", name: "Комната 2" }
-    ],
+  createRoom: (userId, body) => fetch(`http://localhost:8082/api/rooms/${userId}`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(body)
+  }).then(r => r.json()),
+  getRoomsByUser: (userId) => fetch(`http://localhost:8082/api/rooms/user-rooms/${userId}`)
+    .then(r => r.json())
+    .then(r => r.rooms ?? r),          // ← унифицированный массив
+
+    getRooms: async () => [{ id: "r1", name: "Комната 1" }, { id: "r2", name: "Комната 2" }],
 
     /* SIMULATIONS, PID, MODELS */
-    // getSimulations: (roomId)=>fetch(`http://localhost:8082/api/simulations/room-simulations/${roomId}`).then(r=>r.json()),
-    getSimulations: async (roomId) => [{ id: "s1", roomId, name: "PID, 2025-06-07 12:00", status: "FINISHED" }, { id: "s2", roomId, name: "RL Agent, 2025-06-07 12:45", status: "RUNNING", progress: 67 }],
+    getSimulations: async (roomId)=>fetch(`http://localhost:8082/api/simulations/room-simulations/${roomId}`).then(r=>r.json()),
+    // getSimulations: async (roomId) => [{ id: "s1", roomId, name: "PID, 2025-06-07 12:00", status: "FINISHED" }, { id: "s2", roomId, name: "RL Agent, 2025-06-07 12:45", status: "RUNNING", progress: 67 }],
     getPidConfigs:  (roomId)=>fetch(`http://localhost:8082/api/pid-configs/room-configs/${roomId}`).then(r=>r.json()),
-    // getModels:      (roomId)=>fetch(`http://localhost:8082/api/models/room-models/${roomId}`).then(r=>r.json()),
-    getModels: async (roomId) => [{ id: "lstm_1", name: "LSTM 05.06.25", type: "LSTM" }, { id: "rl_1", name: "RL 05.06.25", type: "RL" }],
+    getModels:      (roomId)=>fetch(`http://localhost:8082/api/models/room-models/${roomId}`).then(r=>r.json()),
+    // getModels: async (roomId) => [{ id: "lstm_1", name: "LSTM 05.06.25", type: "LSTM" }, { id: "rl_1", name: "RL 05.06.25", type: "RL" }],
+    autotunePID: async (roomId) => {
+      // заглушка: можно вернуть что угодно или сделать реальный запрос:
+      return fetch(`http://localhost:8082/api/pid-configs/autotune/cohen-coon/${roomId}`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"}
+      }).then(r => r.json());
+    },
     trainLSTM: async (roomId, simulationId) => {
         // Возвращает модель и статус
         return { id: `lstm_${roomId}_${simulationId}`, name: `LSTM от ${new Date().toLocaleString()}` };
