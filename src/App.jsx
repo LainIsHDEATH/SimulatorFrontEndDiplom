@@ -1,15 +1,29 @@
-import {Routes, Route} from "react-router-dom";
-import RegisterPage from "./components/auth/RegisterPage";
-import Dashboard from "./components/dashboard/Dashboard";
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './layout/Layout';
+import Login from './auth/Login';
+import Register from './auth/Register';
+import Dashboard from './rooms/Dashboard';
 
-// --- Main App ---
-
-export default function App() {
+const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<RegisterPage/>}/>
-      <Route path="/dashboard" element={<Dashboard/>}/>
+      {/* Маршруты без Layout (без авторизации) */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* Защищенные маршруты под главным Layout */}
+      <Route path="/" element={<Layout />}>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route index element={<Navigate to="dashboard" />} />
+      </Route>
+
+      {/* 404 Not Found маршрут по желанию */}
+      <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
-}
+};
+
+export default App;
+
 

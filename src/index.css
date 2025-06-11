@@ -23,3 +23,8 @@ html, body, #root {
 body {
   background-color: #f3f4f6; /* Tailwind slate-100 */
 }
+
+/* Дополнительные глобальные стили, если нужны */
+body {
+  @apply bg-gray-100;
+}
