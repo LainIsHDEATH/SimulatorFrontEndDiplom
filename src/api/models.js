@@ -1,15 +1,16 @@
-const API_BASE = '/api';
+const API_BASE = 'http://localhost:8082/api';
 
 export const getModels = async (roomId) => {
-  const res = await fetch(`${API_BASE}/rooms/${roomId}/models`, {
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
+  const res = await fetch(`${API_BASE}/models/room-models/${roomId}`, {
+    // headers: {
+    //   'Authorization': `Bearer ${localStorage.getItem('token')}`
+    // }
   });
   if (!res.ok) {
     throw new Error('Не удалось загрузить модели');
   }
-  return res.json(); // ожидаем массив моделей {id, name, type, isActive, ...}
+  const json = await res.json();
+  return Array.isArray(json.models) ? json.models : json; // ожидаем массив моделей {id, name, type, isActive, ...}
 };
 
 export const createLstmModel = async (roomId, { name, epochs, trainingSimId }) => {
@@ -17,14 +18,15 @@ export const createLstmModel = async (roomId, { name, epochs, trainingSimId }) =
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+      // 'Authorization': `Bearer ${localStorage.getItem('token')}`
     },
     body: JSON.stringify({ name, type: 'LSTM', params: { epochs, trainingSimId } })
   });
   if (!res.ok) {
     throw new Error('Не удалось создать LSTM-модель');
   }
-  return res.json();
+  const json = await res.json();
+  return Array.isArray(json.models) ? json.models : json;
 };
 
 export const createRlModel = async (roomId, { name, episodes }) => {
@@ -32,25 +34,27 @@ export const createRlModel = async (roomId, { name, episodes }) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+      // 'Authorization': `Bearer ${localStorage.getItem('token')}`
     },
     body: JSON.stringify({ name, type: 'RL', params: { episodes } })
   });
   if (!res.ok) {
     throw new Error('Не удалось создать RL-модель');
   }
-  return res.json();
+  const json = await res.json();
+  return Array.isArray(json.models) ? json.models : json;
 };
 
 export const setModelActive = async (roomId, modelId) => {
   const res = await fetch(`${API_BASE}/rooms/${roomId}/models/${modelId}/activate`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
+    // headers: {
+    //   'Authorization': `Bearer ${localStorage.getItem('token')}`
+    // }
   });
   if (!res.ok) {
     throw new Error('Не удалось активировать модель');
   }
-  return res.json();
+  const json = await res.json();
+  return Array.isArray(json.models) ? json.models : json;
 };

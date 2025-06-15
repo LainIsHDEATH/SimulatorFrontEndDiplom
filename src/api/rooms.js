@@ -1,40 +1,43 @@
-const API_BASE = '/api';
+const API_BASE = 'http://localhost:8082/api';
 
 export const getUsers = async () => {
   const res = await fetch(`${API_BASE}/users`, {
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
+    // headers: {
+    //   'Authorization': `Bearer ${localStorage.getItem('token')}`
+    // }
   });
   if (!res.ok) {
     throw new Error('Не удалось загрузить пользователей');
   }
-  return res.json(); // ожидаем массив пользователей {id, name, email,...}
+  const json = await res.json();
+  return Array.isArray(json.users) ? json.users : json;  // ожидаем массив пользователей {id, name, email,...}
 };
 
 export const getRooms = async (userId) => {
-  const res = await fetch(`${API_BASE}/users/${userId}/rooms`, {
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
+  const res = await fetch(`${API_BASE}/rooms/user-rooms/${userId}`, {
+    // headers: {
+    //   'Authorization': `Bearer ${localStorage.getItem('token')}`
+    // }
   });
   if (!res.ok) {
     throw new Error('Не удалось загрузить комнаты');
   }
-  return res.json(); // ожидаем массив комнат {id, name, params, ...}
+  const json = await res.json();
+  return Array.isArray(json.rooms) ? json.rooms : json; // ожидаем массив комнат {id, name, params, ...}
 };
 
 export const createRoom = async (userId, data) => {
-  const res = await fetch(`${API_BASE}/users/${userId}/rooms`, {
+  const res = await fetch(`${API_BASE}/rooms/${userId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+      // 'Authorization': `Bearer ${localStorage.getItem('token')}`
     },
     body: JSON.stringify(data) // data: { name, params: {...} }
   });
   if (!res.ok) {
     throw new Error('Не удалось создать комнату');
   }
-  return res.json(); // ожидаем созданную комнату
+  const json = await res.json();
+  return Array.isArray(json.room) ? json.room : json; // ожидаем созданную комнату
 };

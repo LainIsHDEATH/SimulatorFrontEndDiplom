@@ -9,7 +9,7 @@ import Button from '../ui/Button';
 const Register = () => {
   const { setUser } = useContext(AppContext);
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -26,7 +26,7 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    register({ name, email, password });
+    register({ username, email, password });
   };
 
   return (
@@ -36,12 +36,12 @@ const Register = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-red-500 text-sm">{error.message}</p>}
           <div>
-            <label className="block text-sm font-medium mb-1">Имя:</label>
+            <label className="block text-sm font-medium mb-1">Имя пользователя:</label>
             <input
               type="text"
               className="w-full border rounded px-3 py-2"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>

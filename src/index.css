@@ -1,30 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
+/* Базовый фон всего приложения */
+@layer base {
+  body {
+    @apply bg-gray-100 antialiased;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+/*body {*/
+/*  margin: 0;*/
+/*  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',*/
+/*    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',*/
+/*    sans-serif;*/
+/*  -webkit-font-smoothing: antialiased;*/
+/*  -moz-osx-font-smoothing: grayscale;*/
+/*  @apply bg-gray-100;*/
+/*  background-color: #f3f4f6; !* Tailwind slate-100 *!*/
+/*}*/
 
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-body {
-  background-color: #f3f4f6; /* Tailwind slate-100 */
-}
+/*code {*/
+/*  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',*/
+/*    monospace;*/
+/*}*/
 
-/* Дополнительные глобальные стили, если нужны */
-body {
-  @apply bg-gray-100;
-}
+/*html, body, #root {*/
+/*  height: 100%;*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*}*/

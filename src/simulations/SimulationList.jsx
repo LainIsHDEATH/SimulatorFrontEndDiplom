@@ -1,16 +1,18 @@
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AppContext } from '../context/AppContext';
-import { getSimulations, createSimulation, continueSimulation } from '../api/simulations';
+import { getSimulations, createSimulation} from '../api/simulations';
 import SimulationForm from './SimulationForm';
 import SimulationGraph from './SimulationGraph';
 import Button from '../ui/Button';
+import RangeFilter from '../ui/RangeFilter';
 
 const SimulationList = () => {
   const { room } = useContext(AppContext);
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [openGraphIds, setOpenGraphIds] = useState([]);
+  const [range, setRange] = useState({ page: 0, size: 0 });   // 0 = «весь ряд»
 
   const roomId = room ? room.id : null;
   const { data: simulations, isLoading, isError, error } = useQuery(
@@ -25,15 +27,6 @@ const SimulationList = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(['simulations', roomId]);
         setShowForm(false);
-      }
-    }
-  );
-
-  const { mutate: continueSim } = useMutation(
-    (simId) => continueSimulation(simId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['simulations', roomId]);
       }
     }
   );
@@ -54,16 +47,30 @@ const SimulationList = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
+      {/* ───────────── Верхняя панель ───────────── */}
+      <div className="flex justify-between items-center mb-2 space-x-4">
         <h3 className="font-semibold">Симуляции</h3>
         <Button onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Отмена' : 'Новая симуляция'}
         </Button>
       </div>
 
+      {/* --- RangeFilter: сверху, если форма скрыта --- */}
+      {!showForm && (
+        <RangeFilter range={range} onChange={setRange}/>
+      )}
+
       {showForm && (
         <div className="mb-4">
           <SimulationForm onCreate={startSim} onCancel={() => setShowForm(false)} />
+        </div>
+      )}
+
+
+      {/* --- RangeFilter: снизу, если форма показана --- */}
+      {showForm && (
+        <div className="mb-2">
+          <RangeFilter range={range} onChange={setRange}/>
         </div>
       )}
 
@@ -74,7 +81,7 @@ const SimulationList = () => {
           <thead>
           <tr className="text-left border-b">
             <th className="py-1">Тип контроллера</th>
-            <th className="py-1">Шаг (timestep)</th>
+            <th className="py-1">Шаг</th>
             <th className="py-1">Итерации</th>
             <th className="py-1">Статус</th>
             <th className="py-1">Действия</th>
@@ -84,13 +91,10 @@ const SimulationList = () => {
           {simulations.map(sim => (
             <tr key={sim.id} className="border-b last:border-b-0">
               <td className="py-1">{sim.controllerType}</td>
-              <td className="py-1">{sim.timestep}</td>
+              <td className="py-1">{sim.timestepSeconds}</td>
               <td className="py-1">{sim.iterations}</td>
               <td className="py-1">{sim.status}</td>
-              <td className="py-1 space-x-2">
-                {(sim.status !== 'Completed' && sim.status !== 'Running') && (
-                  <Button size="sm" onClick={() => continueSim(sim.id)}>Продолжить</Button>
-                )}
+              <td className="py-1">
                 <Button size="sm" onClick={() => handleOpenGraph(sim.id)}>График</Button>
               </td>
             </tr>
@@ -106,6 +110,8 @@ const SimulationList = () => {
           <SimulationGraph
             key={simId}
             simulation={sim}
+            page={range.page || 0}
+            size={range.size   || 0}
             onClose={() => handleCloseGraph(simId)}
           />
         );

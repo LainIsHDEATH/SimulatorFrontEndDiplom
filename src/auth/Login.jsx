@@ -15,10 +15,10 @@ const Login = () => {
   const { mutate: login, isLoading, error } = useMutation(loginApi, {
     onSuccess: (data) => {
       // Предполагается, что API возвращает { user, token }
-      setUser(data.user);
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-      }
+      setUser(data);
+      // if (data.token) {
+      //   localStorage.setItem('token', data.token); // токена пока нет — пропускаем
+      // }
       navigate('/dashboard');
     }
   });

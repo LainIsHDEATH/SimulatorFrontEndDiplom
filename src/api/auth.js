@@ -1,7 +1,7 @@
-const API_BASE = '/api'; // базовый путь к backend API
+const API_BASE = 'http://localhost:8082/api'; // базовый путь к backend API
 
 export const login = async ({ email, password }) => {
-  const res = await fetch(`${API_BASE}/auth/login`, {
+  const res = await fetch(`${API_BASE}/users/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
@@ -12,11 +12,11 @@ export const login = async ({ email, password }) => {
   return res.json(); // ожидаем { user, token }
 };
 
-export const register = async ({ name, email, password }) => {
-  const res = await fetch(`${API_BASE}/auth/register`, {
+export const register = async ({ username, email, password }) => {
+  const res = await fetch(`${API_BASE}/users/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, password })
+    body: JSON.stringify({ username, email, password })
   });
   if (!res.ok) {
     throw new Error('Ошибка регистрации');
