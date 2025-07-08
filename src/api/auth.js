@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8082/api'; // базовый путь к backend API
+const API_BASE = 'http://storage-service:8082/api'; // базовый путь к backend API
 
 export const login = async ({ email, password }) => {
   const res = await fetch(`${API_BASE}/users/login`, {

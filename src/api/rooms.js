@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8082/api';
+const API_BASE = 'http://storage-service:8082/api';
 
 export const getUsers = async () => {
   const res = await fetch(`${API_BASE}/users`, {

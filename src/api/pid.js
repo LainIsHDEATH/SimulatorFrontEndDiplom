@@ -1,5 +1,5 @@
-const API_BASE = 'http://localhost:8082/api';
-const AUTOTUNE_API_BASE = 'http://localhost:7000';
+const API_BASE = 'http://storage-service:8082/api';
+const AUTOTUNE_API_BASE = 'http://pid-autotune-service:7000';
 
 export const getPIDConfigs = async (roomId) => {
   const res = await fetch(`${API_BASE}/pid-configs/room-configs/${roomId}`, {
