@@ -8,13 +8,12 @@ const RoomForm = () => {
   const { user } = useContext(AppContext);
   const queryClient = useQueryClient();
   const [name, setName] = useState('');
-  const [roomParams, setRoomParams] = useState('{}'); // JSON параметры в текстовом виде
+  const [roomParams, setRoomParams] = useState('{}');
 
   const { mutate: createRoomMutate, isLoading, error } = useMutation(
     ({ userId, data }) => createRoom(userId, data),
     {
       onSuccess: () => {
-        // обновляем список комнат после создания
         queryClient.invalidateQueries(['rooms', user.id]);
         setName('');
         setRoomParams('{}');
@@ -29,7 +28,7 @@ const RoomForm = () => {
     try {
       parsedRoomParams = JSON.parse(roomParams);
     } catch {
-      alert('Неверный JSON в параметрах комнаты');
+      alert('Невірний JSON в параметрах кімнати');
       return;
     }
     createRoomMutate({ userId: user.id, data: { name, roomParams: parsedRoomParams } });
@@ -43,7 +42,7 @@ const RoomForm = () => {
       <div className="flex items-center space-x-2 mb-2">
         <input
           type="text"
-          placeholder="Название комнаты"
+          placeholder="Назва кімнати"
           className="border rounded px-3 py-1 flex-1"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -51,14 +50,14 @@ const RoomForm = () => {
         />
         <input
           type="text"
-          placeholder="JSON параметры"
+          placeholder="JSON параметри"
           className="border rounded px-3 py-1 flex-1"
           value={roomParams}
           onChange={(e) => setRoomParams(e.target.value)}
           required
         />
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Создание...' : 'Добавить комнату'}
+          {isLoading ? 'Створення...' : 'Додати кімнату'}
         </Button>
       </div>
     </form>

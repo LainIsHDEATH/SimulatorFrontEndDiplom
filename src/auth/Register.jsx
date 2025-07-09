@@ -15,7 +15,6 @@ const Register = () => {
 
   const { mutate: register, isLoading, error } = useMutation(registerApi, {
     onSuccess: (data) => {
-      // Предполагается, что API возвращает { user, token }
       setUser(data.user);
       if (data.token) {
         localStorage.setItem('token', data.token);
@@ -32,11 +31,11 @@ const Register = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <Card className="w-full max-w-sm">
-        <h2 className="text-xl font-semibold mb-4 text-center">Регистрация</h2>
+        <h2 className="text-xl font-semibold mb-4 text-center">Registration</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-red-500 text-sm">{error.message}</p>}
           <div>
-            <label className="block text-sm font-medium mb-1">Имя пользователя:</label>
+            <label className="block text-sm font-medium mb-1">Username:</label>
             <input
               type="text"
               className="w-full border rounded px-3 py-2"
@@ -56,7 +55,7 @@ const Register = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Пароль:</label>
+            <label className="block text-sm font-medium mb-1">Password:</label>
             <input
               type="password"
               className="w-full border rounded px-3 py-2"
@@ -66,11 +65,11 @@ const Register = () => {
             />
           </div>
           <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
+            {isLoading ? 'Registration...' : 'Register'}
           </Button>
         </form>
         <p className="mt-4 text-sm text-center">
-          Уже есть аккаунт? <Link to="/login" className="text-blue-600 hover:underline">Войти</Link>
+          Have an account? <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
         </p>
       </Card>
     </div>

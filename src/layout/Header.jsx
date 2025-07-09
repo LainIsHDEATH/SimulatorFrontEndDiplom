@@ -6,11 +6,9 @@ const Header = () => {
   const { user, setUser, setRoom } = useContext(AppContext);
 
   const handleLogout = () => {
-    // Очистка текущего пользователя и комнаты, удаление токена
     setUser(null);
     setRoom(null);
     localStorage.removeItem('token');
-    // После этого Redirect осуществляется через Navigate компонент в Layout
   };
 
   return (
@@ -18,8 +16,8 @@ const Header = () => {
       <h1 className="text-xl font-semibold">Temperature Simulation System</h1>
       {user && (
         <div className="flex items-center space-x-4">
-          <span className="text-gray-700">Привет, {user.name}!</span>
-          <Button onClick={handleLogout}>Выйти</Button>
+          <span className="text-gray-700">Hello, {user.name}!</span>
+          <Button onClick={handleLogout}>Log out</Button>
         </div>
       )}
     </header>

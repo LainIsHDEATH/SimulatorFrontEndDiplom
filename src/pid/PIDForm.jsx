@@ -31,7 +31,7 @@ const PIDForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3 className="font-semibold mb-2">Добавить PID-конфигурацию вручную</h3>
+      <h3 className="font-semibold mb-2">Додати PID-конфігурацію вручну (Manual)</h3>
       {error && <p className="text-red-500 text-sm">{error.message}</p>}
       <div className="flex items-center space-x-2 mb-2">
         <input
@@ -50,7 +50,7 @@ const PIDForm = () => {
           value={kd} onChange={(e) => setKd(e.target.value)} required
         />
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Сохранение...' : 'Добавить'}
+          {isLoading ? 'Збереження...' : 'Додати'}
         </Button>
       </div>
     </form>

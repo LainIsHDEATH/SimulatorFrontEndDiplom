@@ -6,7 +6,6 @@ import { getRooms } from '../api/rooms';
 const RoomList = () => {
   const { user, room, setRoom } = useContext(AppContext);
 
-  // Получаем список комнат выбранного пользователя
   const userId = user ? user.id : null;
   const { data: rooms, isLoading, isError, error } = useQuery(
     ['rooms', userId],
@@ -19,20 +18,20 @@ const RoomList = () => {
   };
 
   if (!user) {
-    return null; // если пользователь не выбран, ничего не показываем
+    return null;
   }
   if (isLoading) {
-    return <p>Загрузка комнат...</p>;
+    return <p>Загрузка кімнат...</p>;
   }
   if (isError) {
-    return <p className="text-red-500">Ошибка загрузки комнат: {error.message}</p>;
+    return <p className="text-red-500">Помилка загрузки кімнати: {error.message}</p>;
   }
 
   return (
     <div className="mb-4">
-      <h3 className="font-semibold mb-2">Комнаты:</h3>
+      <h3 className="font-semibold mb-2">Кімнати:</h3>
       {rooms.length === 0 ? (
-        <p>Нет комнат.</p>
+        <p>Кімнати відсутні.</p>
       ) : (
         <ul className="space-y-1">
           {rooms.map(r => (

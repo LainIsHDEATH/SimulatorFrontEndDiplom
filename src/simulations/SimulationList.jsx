@@ -1,21 +1,22 @@
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AppContext } from '../context/AppContext';
-import { getSimulations, createSimulation} from '../api/simulations';
-import SimulationForm from './SimulationForm';
-import SimulationGraph from './SimulationGraph';
-import Button from '../ui/Button';
-import RangeFilter from '../ui/RangeFilter';
+import { getSimulations, createSimulation } from '../api/simulations';
+import SimulationForm   from './SimulationForm';
+import SimulationGraph  from './SimulationGraph';
+import Button           from '../ui/Button';
+import RangeFilter      from '../ui/RangeFilter';
 
 const SimulationList = () => {
-  const { room } = useContext(AppContext);
-  const queryClient = useQueryClient();
-  const [showForm, setShowForm] = useState(false);
-  const [openGraphIds, setOpenGraphIds] = useState([]);
-  const [range, setRange] = useState({ page: 0, size: 0 });   // 0 = «весь ряд»
+  const { room }      = useContext(AppContext);
+  const queryClient   = useQueryClient();
 
-  const roomId = room ? room.id : null;
-  const { data: simulations, isLoading, isError, error } = useQuery(
+  const [showForm,     setShowForm]     = useState(false);
+  const [openGraphIds, setOpenGraphIds] = useState([]);
+  const [range,        setRange]        = useState({ page: 0, size: 0 });
+
+  const roomId = room?.id ?? null;
+  const { data: simulations = [], isLoading, isError, error } = useQuery(
     ['simulations', roomId],
     () => getSimulations(roomId),
     { enabled: !!roomId }
@@ -31,34 +32,21 @@ const SimulationList = () => {
     }
   );
 
-  const handleOpenGraph = (simId) => {
-    if (!openGraphIds.includes(simId)) {
-      setOpenGraphIds([...openGraphIds, simId]);
-    }
-  };
+  const handleOpenGraph  = (id) => !openGraphIds.includes(id) && setOpenGraphIds([...openGraphIds, id]);
+  const handleCloseGraph = (id) => setOpenGraphIds(openGraphIds.filter(gid => gid !== id));
 
-  const handleCloseGraph = (simId) => {
-    setOpenGraphIds(openGraphIds.filter(id => id !== simId));
-  };
-
-  if (!room) return null;
-  if (isLoading) return <p>Загрузка симуляций...</p>;
-  if (isError) return <p className="text-red-500">Ошибка: {error.message}</p>;
+  if (!room)      return null;
+  if (isLoading)  return <p>Загрузка симуляцій…</p>;
+  if (isError)    return <p className="text-red-500">Помилка: {error.message}</p>;
 
   return (
     <div>
-      {/* ───────────── Верхняя панель ───────────── */}
       <div className="flex justify-between items-center mb-2 space-x-4">
-        <h3 className="font-semibold">Симуляции</h3>
+        <h3 className="font-semibold">Симуляції</h3>
         <Button onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Отмена' : 'Новая симуляция'}
+          {showForm ? 'Відмінити' : 'Нова симуляція'}
         </Button>
       </div>
-
-      {/* --- RangeFilter: сверху, если форма скрыта --- */}
-      {!showForm && (
-        <RangeFilter range={range} onChange={setRange}/>
-      )}
 
       {showForm && (
         <div className="mb-4">
@@ -66,25 +54,17 @@ const SimulationList = () => {
         </div>
       )}
 
-
-      {/* --- RangeFilter: снизу, если форма показана --- */}
-      {showForm && (
-        <div className="mb-2">
-          <RangeFilter range={range} onChange={setRange}/>
-        </div>
-      )}
-
       {simulations.length === 0 ? (
-        <p>Симуляций пока нет.</p>
+        <p>Симуляцій поки нема.</p>
       ) : (
         <table className="w-full text-sm mb-4">
           <thead>
           <tr className="text-left border-b">
-            <th className="py-1">Тип контроллера</th>
+            <th className="py-1">Тип контролера</th>
             <th className="py-1">Шаг</th>
-            <th className="py-1">Итерации</th>
+            <th className="py-1">Ітерації</th>
             <th className="py-1">Статус</th>
-            <th className="py-1">Действия</th>
+            <th className="py-1">Дії</th>
           </tr>
           </thead>
           <tbody>
@@ -95,7 +75,7 @@ const SimulationList = () => {
               <td className="py-1">{sim.iterations}</td>
               <td className="py-1">{sim.status}</td>
               <td className="py-1">
-                <Button size="sm" onClick={() => handleOpenGraph(sim.id)}>График</Button>
+                <Button size="sm" onClick={() => handleOpenGraph(sim.id)}>Графік</Button>
               </td>
             </tr>
           ))}
@@ -103,16 +83,21 @@ const SimulationList = () => {
         </table>
       )}
 
-      {/* Панели графиков для выбранных симуляций */}
-      {openGraphIds.map(simId => {
-        const sim = simulations.find(s => s.id === simId);
+      {openGraphIds.length > 0 && (
+        <div className="mb-3">
+          <RangeFilter range={range} onChange={setRange} />
+        </div>
+      )}
+
+      {openGraphIds.map(id => {
+        const sim = simulations.find(s => s.id === id);
         return sim && (
           <SimulationGraph
-            key={simId}
+            key={id}
             simulation={sim}
             page={range.page || 0}
-            size={range.size   || 0}
-            onClose={() => handleCloseGraph(simId)}
+            size={range.size || 0}
+            onClose={() => handleCloseGraph(id)}
           />
         );
       })}

@@ -14,11 +14,7 @@ const Login = () => {
 
   const { mutate: login, isLoading, error } = useMutation(loginApi, {
     onSuccess: (data) => {
-      // Предполагается, что API возвращает { user, token }
       setUser(data);
-      // if (data.token) {
-      //   localStorage.setItem('token', data.token); // токена пока нет — пропускаем
-      // }
       navigate('/dashboard');
     }
   });
@@ -31,7 +27,7 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <Card className="w-full max-w-sm">
-        <h2 className="text-xl font-semibold mb-4 text-center">Вход</h2>
+        <h2 className="text-xl font-semibold mb-4 text-center">Login</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="text-red-500 text-sm">{error.message}</p>}
           <div>
@@ -45,7 +41,7 @@ const Login = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Пароль:</label>
+            <label className="block text-sm font-medium mb-1">Password:</label>
             <input
               type="password"
               className="w-full border rounded px-3 py-2"
@@ -59,7 +55,7 @@ const Login = () => {
           </Button>
         </form>
         <p className="mt-4 text-sm text-center">
-          Нет аккаунта? <Link to="/register" className="text-blue-600 hover:underline">Регистрация</Link>
+          No account? <Link to="/register" className="text-blue-600 hover:underline">Sign up</Link>
         </p>
       </Card>
     </div>

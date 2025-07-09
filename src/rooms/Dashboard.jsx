@@ -17,19 +17,13 @@ const Dashboard = () => {
   const { user, room } = useContext(AppContext);
   const [activeTab, setActiveTab] = useState('PID');  // по умолчанию первая вкладка
 
-  // Если пользователь (selected user) не выбран (только для администратора)
-  // Показать, например, приглашение выбрать пользователя
-  // (Если обычный пользователь, user всегда задан после логина)
-  // Здесь это можно обработать, но Sidebar/Layout уже перенаправляет если не залогинен.
-
-  // Обработчик смены вкладки
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
   return (
     <div className="space-y-4">
-      {/* Блок выбора пользователя и комнаты */}
+      {}
       <Card>
         <UserSelect />
         {user ? (
@@ -38,15 +32,15 @@ const Dashboard = () => {
             <RoomForm />
           </>
         ) : (
-          <p className="text-gray-600">Выберите пользователя, чтобы просмотреть комнаты.</p>
+          <p className="text-gray-600">Оберіть користувача, щоб продивитись кімнати.</p>
         )}
       </Card>
 
-      {/* Вкладки PID, Модели, Симуляции (появляются после выбора комнаты) */}
+      {}
       {room ? (
         <div>
           <Tabs
-            tabs={['PID', 'AI-модели', 'Симуляции']}
+            tabs={['PID', 'AI-моделі', 'Симуляції']}
             activeTab={activeTab}
             onChange={handleTabChange}
           />
@@ -61,7 +55,7 @@ const Dashboard = () => {
                 </Card>
               </div>
             )}
-            {activeTab === 'AI-модели' && (
+            {activeTab === 'AI-моделі' && (
               <div className="space-y-4">
                 <Card>
                   <ModelList />
@@ -74,7 +68,7 @@ const Dashboard = () => {
                 </Card>
               </div>
             )}
-            {activeTab === 'Симуляции' && (
+            {activeTab === 'Симуляції' && (
               <Card>
                 <SimulationList />
               </Card>
@@ -82,7 +76,7 @@ const Dashboard = () => {
           </div>
         </div>
       ) : (
-        <p className="text-gray-600">Выберите комнату, чтобы просмотреть детали (PID, модели, симуляции).</p>
+        <p className="text-gray-600">Оберіть кімнату, щоб продивитись деталі (PID, моделі, симуляції).</p>
       )}
     </div>
   );

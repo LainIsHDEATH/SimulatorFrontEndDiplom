@@ -8,14 +8,12 @@ import Button                       from '../ui/Button';
 const SimulationForm = ({ onCreate, onCancel }) => {
   const { room } = useContext(AppContext);
 
-  /* локальное состояние формы */
   const [controllerType, setControllerType] = useState('PID');
   const [pidConfigId,    setPidConfigId]    = useState('');
   const [modelId,        setModelId]        = useState('');
   const [timestepSeconds,setTimestepSeconds]= useState(60);
   const [iterations,     setIterations]     = useState(100);
 
-  /* справочники */
   const { data: pidConfigs } = useQuery(
     ['pidConfigs', room?.id],
     () => getPIDConfigs(room.id),
@@ -27,11 +25,9 @@ const SimulationForm = ({ onCreate, onCancel }) => {
     { enabled: !!room }
   );
 
-  /* отправка формы */
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    /** ⇣ собираем payload ровно в формате, который ждёт бэкенд */
     const data = {
       controllerType,
       timestepSeconds: Number(timestepSeconds),
@@ -54,9 +50,9 @@ const SimulationForm = ({ onCreate, onCancel }) => {
     <form onSubmit={handleSubmit} className="border p-2 rounded bg-gray-50">
       <div className="grid grid-cols-2 gap-2 mb-2">
 
-        {/* Тип контроллера */}
+        {}
         <div>
-          <label className="block text-sm">Тип контроллера:</label>
+          <label className="block text-sm">Тип контролера:</label>
           <select
             value={controllerType}
             onChange={(e) => setControllerType(e.target.value)}
@@ -68,7 +64,7 @@ const SimulationForm = ({ onCreate, onCancel }) => {
           </select>
         </div>
 
-        {/* Шаг симуляции */}
+        {}
         <div>
           <label className="block text-sm">Шаг, сек:</label>
           <input
@@ -80,9 +76,9 @@ const SimulationForm = ({ onCreate, onCancel }) => {
           />
         </div>
 
-        {/* Итерации */}
+        {}
         <div>
-          <label className="block text-sm">Итерации:</label>
+          <label className="block text-sm">Ітерації:</label>
           <input
             type="number" min="1"
             className="w-full border rounded px-2 py-1"
@@ -92,27 +88,31 @@ const SimulationForm = ({ onCreate, onCancel }) => {
           />
         </div>
 
-        {/* PID config */}
-        {controllerType === 'PID' && (
-          <div>
-            <label className="block text-sm">PID-конфигурация:</label>
+        {}
+        {(controllerType === 'PID' || controllerType === 'PID_LSTM') && (
+          <div className="col-span-2">
+            <label className="block text-sm">PID configuration:</label>
             <select
               value={pidConfigId}
               onChange={(e) => setPidConfigId(e.target.value)}
               className="w-full border rounded px-2 py-1"
               required
             >
-              <option value="">Выберите конфиг</option>
-              {pidConfigs?.map(cfg => (
-                <option key={cfg.id} value={cfg.id}>
-                  {cfg.tunedMethod || 'Manual'} (Kp={cfg.kp})
-                </option>
-              ))}
+              <option value="">Choose PID config…</option>
+              {pidConfigs?.map(cfg => {
+                const label = `${cfg.tunedMethod || 'Manual'} `
+                  + `(Kp=${cfg.kp ?? 0}, Ki=${cfg.ki ?? 0}, Kd=${cfg.kd ?? 0})`;
+                return (
+                  <option key={cfg.id} value={cfg.id} title={label}>
+                    {label}
+                  </option>
+                );
+              })}
             </select>
           </div>
         )}
 
-        {/* AI-модель */}
+        {}
         {(controllerType === 'PID_LSTM' || controllerType === 'RL') && (
           <div>
             <label className="block text-sm">AI-модель:</label>
@@ -122,12 +122,15 @@ const SimulationForm = ({ onCreate, onCancel }) => {
               className="w-full border rounded px-2 py-1"
               required
             >
-              <option value="">Выберите модель</option>
-              {models?.map(m => (
-                <option key={m.id} value={m.id}>
-                  {m.name} ({m.type})
-                </option>
-              ))}
+              <option value="">Оберіть модель</option>
+              {models?.map((m) => {
+                const modelLabel = `${m.id} (${m.type})`;
+                return (
+                  <option key={m.id} value={m.id} title={modelLabel}>
+                    {modelLabel}
+                  </option>
+                );
+              })}
             </select>
           </div>
         )}
@@ -135,12 +138,7 @@ const SimulationForm = ({ onCreate, onCancel }) => {
 
       {/* кнопки */}
       <div className="flex space-x-2">
-        <Button type="submit">Запустить</Button>
-        {onCancel && (
-          <Button type="button" onClick={onCancel}>
-            Отмена
-          </Button>
-        )}
+        <Button type="submit">Запустити</Button>
       </div>
     </form>
   );

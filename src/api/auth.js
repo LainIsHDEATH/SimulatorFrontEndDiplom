@@ -7,7 +7,7 @@ export const login = async ({ email, password }) => {
     body: JSON.stringify({ email, password })
   });
   if (!res.ok) {
-    throw new Error('Ошибка авторизации');
+    throw new Error('Auth error');
   }
   return res.json(); // ожидаем { user, token }
 };
@@ -19,7 +19,7 @@ export const register = async ({ username, email, password }) => {
     body: JSON.stringify({ username, email, password })
   });
   if (!res.ok) {
-    throw new Error('Ошибка регистрации');
+    throw new Error('Auth error');
   }
-  return res.json(); // ожидаем { user, token } или { user } и отдельно получить токен
+  return res.json();
 };
