@@ -1,6 +1,6 @@
-const API_BASE        = 'http://storage-service:8082/api';
-export const TRAIN_LSTM_API = 'http://lstm-trainer-service:7001/train';   // FastAPI trainer
-export const TRAIN_RL_API   = 'http://rl-trainer-service:7002/train';   // RL trainer
+const API_BASE        = 'http://localhost:8082/api';
+export const TRAIN_LSTM_API = 'http://localhost:7001/train';   // FastAPI trainer
+export const TRAIN_RL_API   = 'http://localhost:7002/train';   // RL trainer
 
 /* ─────────────────────── list models ─────────────────────── */
 export const getModels = async (roomId) => {

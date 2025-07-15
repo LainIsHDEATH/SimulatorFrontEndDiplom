@@ -1,4 +1,4 @@
-const API_BASE = 'http://storage-service:8082/api';
+const API_BASE = 'http://localhost:8082/api';
 
 export const getSimulations = async (roomId) => {
   const res = await fetch(`${API_BASE}/simulations/room-simulations/${roomId}`, {
@@ -15,7 +15,7 @@ export const getSimulations = async (roomId) => {
 
 export const createSimulation = async (roomId, simData) => {
   const payload = { roomId, ...simData };
-  const res = await fetch(`http://room-simulator-service:8080/api/simulations/start`, {
+  const res = await fetch(`http://localhost:8080/api/simulations/start`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
